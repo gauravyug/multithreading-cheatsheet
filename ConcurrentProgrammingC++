@@ -1,0 +1,160 @@
+Chapter 1: Parallel Computing Hardware
+
+Sequential vs Parallel:
+
+Sequential: One task at a time.
+
+Parallel: Multiple tasks simultaneously (multi-core, SIMD, GPU).
+
+Architectures:
+
+SISD: Single instruction, single data.
+
+SIMD: Single instruction, multiple data (e.g., AVX).
+
+MISD: Rare, for fault tolerance.
+
+MIMD: Multiple instruction, multiple data (multi-core CPUs).
+
+Memory Models:
+
+Shared Memory: Threads access shared address space.
+
+Distributed Memory: Processes communicate via messages (e.g., MPI).
+
+Chapter 2: Threads and Processes
+
+Threads vs Processes:
+
+Processes: Independent, separate memory.
+
+Threads: Lightweight, shared memory space.
+
+Concurrent vs Parallel:
+
+Concurrent: Interleaved execution.
+
+Parallel: Truly simultaneous execution.
+
+Thread Lifecycle:
+
+Create → Run → Block → Terminate
+
+Scheduling:
+
+Preemptive and cooperative.
+
+Example:
+
+std::thread t([]() { std::cout << "Hello from thread"; });
+t.join();
+
+Chapter 3: Mutual Exclusion
+
+Data Race:
+
+Occurs when multiple threads access shared data without synchronization.
+
+Atomic Objects:
+
+std::atomic<int> counter{0};
+counter.fetch_add(1);
+
+Chapter 4: Locks
+
+mutex: Standard mutual exclusion lock.
+
+recursive_mutex: Allows the same thread to lock multiple times.
+
+try_lock: Attempts to lock without blocking.
+
+shared_mutex: Multiple readers, single writer.
+
+Example:
+
+std::mutex m;
+m.lock();
+// critical section
+m.unlock();
+
+Chapter 5: Liveness
+
+Deadlock: Circular wait on resources.
+
+Abandoned Lock: Thread exits without unlocking.
+
+Starvation: Thread waits indefinitely.
+
+Livelock: Threads actively change state but make no progress.
+
+Chapter 6: Synchronization
+
+Condition Variables:
+
+std::condition_variable cv;
+std::mutex m;
+bool ready = false;
+cv.wait(lock, []{ return ready; });
+
+Producer-Consumer Problem:
+
+Uses mutex + condition_variable to sync buffer access.
+
+Semaphores (in C++20):
+
+std::counting_semaphore<1> sem(1);
+sem.acquire();
+sem.release();
+
+Chapter 7: Barriers
+
+Race Condition:
+
+Incorrect behavior due to timing of thread execution.
+
+Barrier:
+
+Synchronization point where threads wait.
+
+std::barrier sync_point(3);
+sync_point.arrive_and_wait();
+
+Chapter 8: Asynchronous Tasks
+
+Futures & async:
+
+auto fut = std::async(std::launch::async, []{ return 42; });
+int result = fut.get();
+
+Thread Pool:
+
+Pool of worker threads re-used for multiple tasks.
+
+Divide and Conquer:
+
+Break task into subtasks and run in parallel.
+
+Chapter 9: Evaluating Parallel Performance
+
+Speedup: Time(sequential) / Time(parallel)
+
+Latency: Time to complete one task.
+
+Throughput: Tasks per unit time.
+
+Amdahl's Law:
+
+Speedup <= 1 / (S + (1 - S) / N)
+S = serial portion, N = # processors
+
+Chapter 10: Designing Parallel Programs
+
+Partitioning: Split work into independent chunks.
+
+Communication: How threads/processes exchange data.
+
+Agglomeration: Combine tasks to reduce overhead.
+
+Mapping: Assign tasks to processors/threads efficiently.
+
+Tip: Always prefer std::thread, std::mutex, std::condition_variable, std::async, and C++20 concurrency features for clean and portable concurrent programming in C++
